@@ -44,6 +44,24 @@ class Graph:
                         stack.append(neighbor)
         return result
 
+    def bfs(self):
+        visited = []
+        queue = deque()
+
+        queue.append(start)
+        visited.add(start)
+
+        while queue:
+            vertex = queue.popleft()
+            print(vertex)
+
+            for neighbor in graph[vertex]:
+                if neighbor not in visited:
+                    queue.append(neighbor)
+                    visited.add(neighbor)
+
+
 g = Graph(a)
 
 print(g.dfs())
+print(g.bfs())

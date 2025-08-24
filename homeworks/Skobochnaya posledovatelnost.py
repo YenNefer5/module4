@@ -1,26 +1,44 @@
-def is_balanced(a):
+from inspect import stack
+
+
+def RPN(expression):
     stack = []
-    brackets = {')': '(', '}': '{', ']': '['}
+    tokens = expression.split()
 
-    for char in a:
-        if char in brackets.values():
-            # Если символ - открывающая скобка, добавляем в стек
-            stack.append(char)
-        elif char in brackets.keys():
-            # Если символ - закрывающая скобка
-            if stack and stack[-1] == brackets[char]:
-                # Если верхняя открывающая скобка соответствует закрывающей, убираем её
-                stack.pop()
+
+        for token in tokens:
+            if token.isdigit() or (token[0] == '-' and token[1:].isdigit()):
+                # Если токен - число, помещаем его в стек
+                stack.append(float(token))
+        else:
+            # Если токен - оператор, извлекаем из стека два верхних элемента и выполняем операцию
+            operand2 = stack.pop()
+            operand1 = stack.pop()
+
+            if token == '+':
+                result = operand1 + operand2
+            elif token == '-':
+                result = operand1 - operand2
+            elif token == '*':
+                result = operand1 * operand2
+            elif token == '/':
+                if operand2 == 0:
+                    raise ValueError("Ошибка: деление на ноль.")
+                result = operand1 / operand2
             else:
-                # Если нет соответствия, последовательность неправильная
-                return False
+                raise ValueError(f"Ошибка: неизвестный оператор '{token}'.")
 
-    # Если стек пуст, значит все скобки были корректно закрыты
-    return len(stack) == 0
+            # Помещаем результат обратно в стек
+            stack.append(result)
+
+        # На выходе в стеке должен остаться единственный элемент - результат вычисления
+        if len(stack) != 1:
+            raise ValueError("Ошибка: неверное выражение.")
+
+        return stack.pop()
 
 # Считываем строку
-input_string = input("Введите строку со скобками: ")
-if is_balanced(input_string):
-    print("Строка является правильной скобочной последовательностью.")
-else:
-    print("Строка является неправильной скобочной последовательностью.")
+# Пример использования
+input_expression = input("Введите выражение в обратной польской записи: ")
+    result = evaluate_rpn(input_expression)
+    print(f"Результат: {result}")

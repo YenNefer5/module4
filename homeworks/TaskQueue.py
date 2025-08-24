@@ -1,46 +1,55 @@
-from dataclasses import dataclass
-
-@dataclass
-class Task:
-    name: str
-
-class TaskQueue:
+class Deque:
     def __init__(self):
-        self.tasks = []
-
-    def add_task(self, task):
-        self.tasks.append(task)
+        self.items = []
 
     def is_empty(self):
-        if len(self.tasks) == 0:
-            return True
-        else:
-            return False
+        return len(self.items) == 0
 
-    def get_next_task(self):
+    def add_front(self, item):
+        self.items.insert(0, item)
+
+    def add_rear(self, item):
+        self.items.append(item)
+
+    def remove_front(self):
         if not self.is_empty():
-            return self.tasks.pop(0)
+            return self.items.pop(0)
         else:
-            return None
+            raise IndexError("Двусторонняя очередь пуста")
 
+    def remove_rear(self):
+        if not self.is_empty():
+            return self.items.pop()
+        else:
+            raise IndexError("Двусторонняя очередь пуста")
 
+    def size(self):
+        return len(self.items)
 
+    def display(self):
+        return list(self.items)
 
+# Создаем экземпляр двусторонней очереди
+deque = Deque()
 
-queue = TaskQueue()
+# Визуализируем добавление элементов
+deque.add_front(1)
+print("Очередь после добавления 1 в начало:", deque.display())
 
-task1 = Task("Задача 1")
-task2 = Task("Задача 2")
-task3 = Task("Задача 3")
+deque.add_rear(2)
+print("Очередь после добавления 2 в конец:", deque.display())
 
-queue.add_task(task1)
-queue.add_task(task2)
-queue.add_task(task3)
+deque.add_front(3)
+print("Очередь после добавления 3 в начало:", deque.display())
 
-next_task = queue.get_next_task()
-print(f"Следующая задача: {next_task.name if next_task else 'Нет задач'}")  # Ожидаемый результат: "Задача 1"
+# Визуализируем извлечение элементов
+front_element = deque.remove_front()
+print("Извлечен элемент с начала:", front_element)
+print("Очередь после извлечения с начала:", deque.display())
 
-queue.get_next_task()  # Извлечь следующую задачу
+rear_element = deque.remove_rear()
+print("Извлечен элемент с конца:", rear_element)
+print("Очередь после извлечения с конца:", deque.display())
 
-print(f"Очередь пуста: {queue.is_empty()}")  # Ожидаемый результат: False
+print("Очередь пуста:", deque.is_empty())
 
