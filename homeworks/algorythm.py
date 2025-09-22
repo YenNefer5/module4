@@ -1,34 +1,53 @@
 
 
 class MyDict:
-
     def __init__(self):
-        self._data = {}
+        self._data = []
+
+    def _find_index(self, key):
+        # метод: вернуть индекс пары с данным ключом или -1
+        for i, (k, _) in enumerate(self._data):
+            if k == key:
+                return i
+        return -1
 
     def __getitem__(self, key):
-        return self._data.get(key, None)
+        idx = self._find_index(key)
+        if idx != -1:
+            return self._data[idx][1]
+        return None
 
     def __setitem__(self, key, value):
-        self._data[key] = value
+        idx = self._find_index(key)
+        if idx != -1:
+            self._data[idx] = (key, value)
+        else:
+            self._data.append((key, value))
 
     def __delitem__(self, key):
-        if key in self._data:
-            del self._data[key]
+        idx = self._find_index(key)
+        if idx != -1:
+            self._data.pop(idx)
 
     def keys(self):
-        return list(self._data.keys())
+        return [k for (k, _) in self._data]
 
     def values(self):
-        return list(self._data.values())
+        return [v for (_, v) in self._data]
 
     def items(self):
-        return list(self._data.items())
+        return list(self._data)
 
     def __str__(self):
-        return str(self._data)
+        # строковое представление в виде обычного словаря для удобства отладки
+        parts = []
+        for k, v in self._data:
+            parts.append(f"{repr(k)}: {repr(v)}")
+        return "{" + ", ".join(parts) + "}"
 
     def __contains__(self, key):
         return key in self._data
+
 
 
 
